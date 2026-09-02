@@ -91,7 +91,7 @@ Dördüncü gün, ajanın kullanacağı araçların (Tools) ve otomatik arıza t
 
 ### Karşılaşılan Sorun ve Çözüm Yöntemi
 * **Sorun:** Çok adımlı teşhis sonucunun modele ham metin olarak verilmesi durumunda model bazen arızanın çözüldüğünü anlamayıp eski hata mesajını tekrarlayabiliyordu.
-* **Çözüm:** Teşhis durum makinesi çıktısı yapılandırılmış, emoji ve adım adım başarı göstergeleri içeren bir teşhis raporuna (`TroubleshootStepReport`) dönüştürüldü; böylece modelin 2. tur sentezde onarımı doğru anlaması sağlandı.
+* **Çözüm:** Teşhis durum makinesi çıktısı yapılandırılmış, teknik ve adım adım başarı göstergeleri içeren bir teşhis raporuna (`TroubleshootStepReport`) dönüştürüldü; böylece modelin 2. tur sentezde onarımı doğru anlaması sağlandı.
 
 ---
 
