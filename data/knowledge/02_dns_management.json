@@ -1,0 +1,19 @@
+[
+  {
+    "id": "dns-mac-001",
+    "category": "dns_management",
+    "title": "macOS DNS Ayarları Değiştirme ve Yönetimi",
+    "page": 1,
+    "user_guide": "macOS üzerinde DNS sunucu adreslerini değiştirmek için:\n1. 'Sistem Ayarları' > 'Ağ' > Bağlı olduğunuz servis (Wi-Fi/Ethernet) > 'Ayrıntılar...' > 'DNS' sekmesine gidin.\n2. '+' butonuna basarak yeni DNS IP adreslerini ekleyin (Örn: Google DNS: 8.8.8.8, 8.8.4.4 veya Cloudflare DNS: 1.1.1.1, 1.0.0.1).\n3. 'Tamam' diyerek ayarları uygulayın.\n\nTerminal (CLI) ile DNS Değiştirme:\n- DNS Ayarlama: 'networksetup -setdnsservers Wi-Fi 8.8.8.8 8.8.4.4'\n- DNS Kontrol Etme: 'networksetup -getdnsservers Wi-Fi'\n- DNS Sıfırlama (DHCP'ye dönme): 'networksetup -setdnsservers Wi-Fi empty'\n- DNS Önbelleğini Temizleme: 'sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder'",
+    "agent_spec": {
+      "supported_tools": ["SetDNSTool", "GetDNSTool", "FlushDNSCacheTool"],
+      "trigger_intents": ["change_dns", "set_dns", "update_dns", "get_dns", "clear_dns", "flush_dns"],
+      "required_params": ["interface", "dns_servers"],
+      "safety_level": "medium",
+      "fallback_strategy": "revert_dns",
+      "suggested_command": "networksetup -setdnsservers Wi-Fi 8.8.8.8 8.8.4.4"
+    },
+    "raw_text": "macOS DNS adresi değiştirme komutu networksetup -setdnsservers <servis> <dns1> <dns2>. DNS sorgulama networksetup -getdnsservers. DNS temizleme dscacheutil -flushcache. Google DNS 8.8.8.8 Cloudflare DNS 1.1.1.1.",
+    "tags": ["dns", "setdnsservers", "getdnsservers", "google_dns", "cloudflare_dns", "flushcache", "nameserver"]
+  }
+]

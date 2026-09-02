@@ -1,0 +1,36 @@
+[
+  {
+    "id": "troubleshoot-wifi-001",
+    "category": "troubleshooting",
+    "title": "macOS Wi-Fi Bağlantı Sorunları ve Tanılama",
+    "page": 1,
+    "user_guide": "Wi-Fi bağlantısında IP alınamaması veya internet kopması durumunda:\n1. Wi-Fi arayüzünü kapatıp açın ('networksetup -setairportpower en0 off' ardından 'on').\n2. 'Sistem Ayarları' > 'Wi-Fi' altından mevcut ağın unutulup tekrar bağlanılması sağlanır.\n3. DHCP kiralamasını yenileyin ('networksetup -setdhcp Wi-Fi').\n4. Ağ geçidi ve DNS yanıt sürelerini 'ping' komutu ile analiz edin.",
+    "agent_spec": {
+      "supported_tools": ["NetworkTroubleshootTool", "GetInterfaceInfoTool"],
+      "trigger_intents": ["wifi_not_working", "wifi_disconnected", "cant_connect_wifi"],
+      "required_params": ["interface"],
+      "safety_level": "safe",
+      "fallback_strategy": "troubleshoot_network",
+      "suggested_command": "networksetup -setairportpower en0 on"
+    },
+    "raw_text": "Wi-Fi çalışmıyor kablosuz ağa bağlanamıyorum IP alamıyorum Wi-Fi sorun giderme tanılama adımları.",
+    "tags": ["wifi", "airport", "wireless", "disconnect", "renew_ip"]
+  },
+  {
+    "id": "cli-ref-001",
+    "category": "cli_reference",
+    "title": "macOS Ağ Komutları Terminal Referansı (networksetup, scutil, ping)",
+    "page": 1,
+    "user_guide": "macOS üzerinde ağ yönetimi için temel CLI komutları:\n- networksetup -listallnetworkservices : Tüm ağ servislerini listeler.\n- networksetup -getinfo <service> : Servisin IP, Subnet, Gateway ve DHCP durumunu verir.\n- networksetup -getdnsservers <service> : Atanmış DNS sunucularını listeler.\n- networksetup -setdnsservers <service> <ips...> : Yeni DNS sunucuları atar.\n- scutil --dns : Sistem resolver konfigürasyonunu detaylı gösterir.\n- dscacheutil -flushcache : DNS önbelleğini temizler.\n- ping -c <count> <target> : Paket iletimi ve gecikme süresini test eder.",
+    "agent_spec": {
+      "supported_tools": ["GetInterfaceInfoTool", "GetDNSTool", "SetDNSTool", "PingTool", "FlushDNSCacheTool"],
+      "trigger_intents": ["cli_commands", "terminal_commands", "networksetup_help"],
+      "required_params": [],
+      "safety_level": "safe",
+      "fallback_strategy": "",
+      "suggested_command": "networksetup -listallnetworkservices"
+    },
+    "raw_text": "macOS ağ komutları networksetup scutil ifconfig ping dscacheutil terminal referans kılavuzu.",
+    "tags": ["cli", "terminal", "networksetup", "scutil", "commands", "reference"]
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "id": "dhcp-mac-001",
+    "category": "dhcp_configuration",
+    "title": "macOS DHCP Yapılandırması ve Ayar Konumu",
+    "page": 1,
+    "user_guide": "macOS işletim sisteminde DHCP ayarlarını yapılandırmak için:\n1. Apple Menüsü > 'Sistem Ayarları' (System Settings) açın.\n2. Sol menüden 'Ağ' (Network) sekmesine tıklayın.\n3. Kullandığınız aktif ağ arayüzünü (Wi-Fi veya Ethernet) seçin ve 'Ayrıntılar...' (Details) butonuna basın.\n4. Sol taraftaki 'TCP/IP' sekmesine geçin.\n5. 'IPv4'ü Yapılandır' açılır menüsünden 'DHCP Kullanarak' (Using DHCP) seçeneğini belirleyin.\n6. IP adresinizi yenilemek için aynı menüdeki 'DHCP Kiralamasını Yenile' (Renew DHCP Lease) butonuna basabilir ve 'Tamam' diyerek kaydedebilirsiniz.\n\nTerminal üzerinden DHCP kontrolü için: 'networksetup -getinfo Wi-Fi' komutu kullanılır.",
+    "agent_spec": {
+      "supported_tools": ["GetInterfaceInfoTool", "RenewDHCPTool"],
+      "trigger_intents": ["ask_dhcp_location", "how_to_configure_dhcp", "dhcp_settings_guide", "renew_dhcp"],
+      "required_params": ["interface"],
+      "safety_level": "safe",
+      "fallback_strategy": "troubleshoot_network",
+      "suggested_command": "networksetup -getinfo Wi-Fi"
+    },
+    "raw_text": "macOS DHCP ayarları nereden yapılır? Sistem Ayarları Ağ TCP/IP sekmesinden IPv4'ü Yapılandır seçeneği DHCP Kullanarak olarak ayarlanır. Terminalde networksetup -getinfo ile kontrol edilir.",
+    "tags": ["dhcp", "ip", "tcp_ip", "network_settings", "macos", "renew_lease"]
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "id": "troubleshoot-eth-001",
+    "category": "troubleshooting",
+    "title": "macOS Ethernet & Genel İnternet Bağlantı Sorun Giderme (Troubleshooting)",
+    "page": 1,
+    "user_guide": "İnternete veya yerel ağa erişilemediğinde uygulanacak teşhis ve çözüm adımları:\n1. Fiziksel Arayüz Kontrolü: Ağ kablosunun takılı olduğundan ve arayüz durumunun (Link State: Active) olduğundan emin olun.\n2. Yerel Ağ Geçidi (Gateway/Router) Testi: 'ping -c 2 <Gateway_IP>' komutu ile modeme/yönlendiriciye erişim kontrol edilir.\n3. Dış Ağ (IP Düzeyi) Testi: 'ping -c 2 8.8.8.8' komutu ile internet çıkışı test edilir. Eğer 8.8.8.8'e ping gidiyor fakat siteler açılmıyorsa sorun kesinlikle DNS kaynaklıdır.\n4. DNS Çözümleme Testi: 'ping -c 2 google.com' veya 'dscacheutil -q host -a name google.com' ile alan adı çözümlemesi test edilir.\n5. Çözüm/Düzeltme: DNS yanıt vermiyorsa DNS adresini 8.8.8.8 olarak güncelleyin ve DNS önbelleğini temizleyin.",
+    "agent_spec": {
+      "supported_tools": ["NetworkTroubleshootTool", "PingTool", "SetDNSTool", "FlushDNSCacheTool"],
+      "trigger_intents": ["cannot_access_internet", "no_internet", "internet_disconnected", "troubleshoot_network", "connection_lost", "cant_ping"],
+      "required_params": ["interface"],
+      "safety_level": "medium",
+      "fallback_strategy": "auto_remediate_dns",
+      "suggested_command": "troubleshoot --auto-fix"
+    },
+    "raw_text": "İnternete erişemiyorum internet bağlantım koptu ağ arızası troubleshoot adımları: 1 interface aktif mi 2 gateway ping 192.168.1.1 3 dış ip ping 8.8.8.8 4 dns ping google.com. DNS hatası durumunda 8.8.8.8 dns güncelle ve dscacheutil ile önbellek temizle.",
+    "tags": ["troubleshoot", "no_internet", "ping", "gateway", "diagnostics", "ethernet", "connection_error", "dns_failure"]
+  }
+]

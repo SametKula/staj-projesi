@@ -93,12 +93,12 @@ Chatbot 3 temel senaryo üzerinde uzmanlaşmıştır:
 
 ### 4.1 Teknoloji Yığını (Tech Stack)
 * **Programlama Dili:** Go (1.23+)
-* **AI & Agent Çatısı:** Firebase Genkit (Go SDK)
-* **Yerel LLM:** LM Studio (OpenAI-compatible API - `http://localhost:1234/v1`)
-* **Vektör Veritabanı:** Qdrant (veya Chroma / SQLite-vec) — Tek bir Docker Compose ile yönetilebilir hafif yapı.
-* **Embedding Modeli:** Yerel embedding modeli (LM Studio veya hafif yerel embedding servisi).
-* **Hedef İşletim Sistemi:** macOS (Darwin ARM64 / AMD64).
-
+* **AI & Agent Çatısı:** Firebase Genkit Go Architecture & Flow Orchestration
+* **Yerel LLM:** Yerel Model Sunucusu (`http://10.2.2.115:8080/v1`) — Model: `gemma-4-E4B-it-qat-nvfp4.gguf` (Multimodal, Function Calling Destekli)
+* **WebUI:** `http://10.2.2.115:8080/`
+* **Ağ Simülasyonu & Güvenlik:** macOS Network Sandbox Engine (Host sistem ağ ayarlarını koruyan izole durum makinesi)
+* **Vektör & RAG Veri Katmanı:** Hibrit BM25/TF-IDF & Niyet Eşleştirmeli Çift Katmanlı Doküman Seti (`data/knowledge/`)
+* **Hedef İşletim Sistemi:** macOS (Darwin ARM64 / AMD64)
 ### 4.2 Bileşen Sorumlulukları
 
 ```
@@ -151,21 +151,21 @@ RAG verisetinde yer alan her doküman/chunk iki hedef kitleye hitap edecek biçi
 ```
 
 ---
+## 6. Güvenlik ve macOS İzin Yönetimi (Network Sandbox Mimarisi)
 
-## 6. Güvenlik ve macOS İzin Yönetimi
-
-* **Yetkilendirme:** macOS `networksetup` ve sistem ağ ayarlarını değiştiren komutlar yönetici (sudo/root) yetkisi veya kullanıcı onayı gerektirebilir. Tool katmanı, tehlikeli komutları izole edecek, girdi doğrulaması (input sanitization) yapacak ve komut enjeksiyonlarını (command injection) engelleyecektir.
-* **Geri Alma (Rollback):** Kritik ağ ayarları (DNS vb.) değiştirilmeden önce mevcut yapılandırma yedeklenecek; başarısızlık durumunda otomatik geri alma sağlanacaktır.
+* **macOS Host Güvenliği & Sandbox İzolasyonu:** Asistanın test ve geliştirme süreçlerinde macOS ana makinesinin gerçek ağ ayarlarını (`networksetup`, DNS vb.) bozmasını engellemek amacıyla **Network Sandbox Engine** entegre edilmiştir.
+* **Durum Simülasyonu:** `en0` (Wi-Fi), `en1` (Ethernet) arayüzleri, IP/Gateway adresleri ve DNS sunucuları `data/sandbox_state.json` dosyasında izole olarak yönetilir.
+* **Ping & DNS Çözümleme Simülasyonu:** Ağ geçidi, dış IP (8.8.8.8) ve alan adı (google.com) testleri sandbox durumuna göre deterministik olarak işletilir. Hatalı DNS durumlarında IP pingi geçerken domain çözümleme başarısız olur; böylece gerçekçi arıza senaryoları simüle edilir.
+* **Yetkilendirme & Geri Alma (Rollback):** Değişiklikler anlık olarak loglanır (`LogEntry`), `/status` ve `/reset` komutları ile sandbox durumu anında izlenip sıfırlanabilir.
 
 ---
 
-## 7. Geliştirme Yol Haritası (Roadmap)
+## 7. Geliştirme Yol Haritası ve Tamamlanma Durumu (Roadmap)
 
-Proje aşağıdaki fazlar sırasıyla tamamlanarak geliştirilecektir:
-
-1. **Faz 1: Mimari & Gereksinimler (Mevcut Aşama)** — `chatbot-mimari.md` dokümanının netleştirilmesi ve kullanıcı onayı.
-2. **Faz 2: Veriseti Hazırlığı** — macOS ağ yönetimi ve troubleshooting senaryoları için çift katmanlı, sayfalanmış JSON/Markdown RAG verisetinin oluşturulması.
-3. **Faz 3: Fonksiyonel Spesifikasyonlar (Specs)** — Modüllerin, API'lerin ve Genkit Tool kontratlarının (`docs/specs/`) hazırlanması.
-4. **Faz 4: Detaylı Tasarım (Design)** — Go paket mimarisi, hata yönetimi ve Genkit Flow durum geçişlerinin (`docs/design/`) modellenmesi.
-5. **Faz 5: Uygulama ve Entegrasyon (Implementation)** — Go kodlarının yazılması, LM Studio entegrasyonu, Docker Compose konfigürasyonu ve macOS tool'larının kodlanması.
-6. **Faz 6: Test & Doğrulama (Verification)** — Senaryo testleri (Bilgi sorma, DNS değiştirme, Arıza giderme simülasyonları).
+1. **Faz 1: Mimari & Gereksinimler** $\rightarrow$ [TAMAMLANDI]
+2. **Faz 2: macOS Network Sandbox Motoru** $\rightarrow$ [TAMAMLANDI]
+3. **Faz 3: Çift Katmanlı RAG Veriseti & Arama Motoru** $\rightarrow$ [TAMAMLANDI]
+4. **Faz 4: macOS Sistem Araçları & Teşhis FSM** $\rightarrow$ [TAMAMLANDI]
+5. **Faz 5: Yerel Gemma-4 LLM & Agent Flow Orkestrasyonu** $\rightarrow$ [TAMAMLANDI]
+6. **Faz 6: İnteraktif Terminal CLI Arayüzü** $\rightarrow$ [TAMAMLANDI]
+7. **Faz 7: Uçtan Uca Doğrulama & Staj Defteri Dokümantasyonu** $\rightarrow$ [TAMAMLANDI]
