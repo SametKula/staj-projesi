@@ -21,31 +21,34 @@ Tüm sistem **Go** dili ve **Firebase Genkit (Go SDK)** ile geliştirilecek; mod
 
 ### 2.1 Mimari Diyagram
 
+![Sistem Mimarisi](docs/design/sistem-mimarisi.png)
+
 ```mermaid
-graph TD
-    User([Kullanıcı]) <--> Interface[CLI / API Katmanı]
+flowchart TD
+    User(["👤 macOS Kullanıcısı (Doğal Dil İstekleri)"]) <--> Interface["💻 Arayüz / Giriş Katmanı (CLI / REST API)"]
     
-    subgraph Core ["Go Application (Genkit Core)"]
-        Interface <--> GenkitFlow[Genkit Agent & Flow Engine]
-        GenkitFlow <--> PromptEngine[Prompt & Karar Motoru]
-        GenkitFlow <--> Retriever[RAG Retriever]
-        GenkitFlow <--> ToolManager[macOS Tool Yöneticisi]
-        ToolManager <--> TroubleshootFSM[Troubleshoot Durum Makinesi]
+    Interface <--> Core
+
+    subgraph Core ["🛠️ Go Uygulama Çekirdeği (Firebase Genkit SDK)"]
+        direction TB
+        GenkitAgent["Genkit Flow & Agent Orchestrator"]
+        
+        subgraph CoreModules ["İç Modüller"]
+            direction LR
+            Decision["🧠 Karar & Prompt Motoru"]
+            RAG["📚 RAG Retriever"]
+            ToolMgr["⚙️ macOS Tool Yöneticisi"]
+        end
+        
+        Diagnostics["🔍 Otomatik Teşhis & Troubleshoot Durum Makinesi"]
+        
+        GenkitAgent <--> CoreModules
+        ToolMgr <--> Diagnostics
     end
 
-    subgraph Storage ["Hafif Altyapı (Docker / Local)"]
-        Retriever <--> VectorDB[(Vektör Veritabanı - Qdrant / Chroma)]
-        VectorDB <--> KnowledgeBase[data/knowledge Veriseti]
-    end
-
-    subgraph LLM ["Yerel LLM Servisi"]
-        PromptEngine <--> LMStudio[LM Studio - OpenAI Uyumlu Yerel API]
-    end
-
-    subgraph OS ["macOS İşletim Sistemi Katmanı"]
-        ToolManager <--> NetworksetupCLI[networksetup / scutil]
-        TroubleshootFSM <--> PingRouteCLI[ping / traceroute / dscacheutil]
-    end
+    Decision <--> LLM["🟣 LM Studio (Yerel LLM - OpenAI API)"]
+    RAG <--> Storage["🟢 Docker Compose (Vektör DB - Qdrant/Chroma)"]
+    ToolMgr <--> OS["🟠 macOS Sistem Katmanı (networksetup / scutil / ping)"]
 ```
 
 ---
