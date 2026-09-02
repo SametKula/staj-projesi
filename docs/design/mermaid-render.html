@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mermaid Mimarisi</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true,
+        curve: 'basis'
+      }
+    });
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 40px;
+      display: inline-block;
+      background-color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    #diagram-container {
+      background: #ffffff;
+      padding: 30px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      display: inline-block;
+    }
+    .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="diagram-container">
+    <pre class="mermaid">
+flowchart TD
+    User([Kullanıcı]) <--> Interface[CLI / API Katmanı]
+    
+    subgraph Core ["Go Application (Genkit Core)"]
+        Interface <--> GenkitFlow[Genkit Agent & Flow Engine]
+        GenkitFlow <--> PromptEngine[Prompt & Karar Motoru]
+        GenkitFlow <--> Retriever[RAG Retriever]
+        GenkitFlow <--> ToolManager[macOS Tool Yöneticisi]
+        ToolManager <--> TroubleshootFSM[Troubleshoot Durum Makinesi]
+    end
+
+    subgraph LLM ["Yerel LLM Servisi"]
+        PromptEngine <--> LMStudio[LM Studio - OpenAI Uyumlu Yerel API]
+    end
+
+    subgraph Storage ["Hafif Altyapı (Docker / Local)"]
+        Retriever <--> VectorDB[(Vektör Veritabanı - Qdrant / Chroma)]
+        VectorDB <--> KnowledgeBase[data/knowledge Veriseti]
+    end
+
+    subgraph OS ["macOS İşletim Sistemi Katmanı"]
+        ToolManager <--> NetworksetupCLI[networksetup / scutil]
+        TroubleshootFSM <--> PingRouteCLI[ping / traceroute / dscacheutil]
+    end
+    </pre>
+  </div>
+</body>
+</html>
