@@ -77,7 +77,7 @@ func main() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
-		fmt.Printf("\n%s%s🧑 Kullanıcı > %s", ColorBold, ColorCyan, ColorReset)
+		fmt.Printf("\n%s%sKullanici > %s", ColorBold, ColorCyan, ColorReset)
 		if !scanner.Scan() {
 			break
 		}
@@ -117,7 +117,7 @@ func main() {
 }
 
 func executeAndPrint(orchestrator *agent.Orchestrator, sandbox *tools.NetworkSandbox, userQuery string) {
-	fmt.Printf("\n%s⏳ Ağ dokümanları taranıyor ve analiz ediliyor...%s\n", ColorGray, ColorReset)
+	fmt.Printf("\n%s[BILGI] Ag dokumanlari taraniyor ve analiz ediliyor...%s\n", ColorGray, ColorReset)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
@@ -130,40 +130,39 @@ func executeAndPrint(orchestrator *agent.Orchestrator, sandbox *tools.NetworkSan
 
 	// Print RAG Information
 	if len(resp.RetrievedChunks) > 0 {
-		fmt.Printf("\n%s📚 [RAG Eşleşen Bilgi Chunk'ları]:%s\n", ColorPurple, ColorReset)
+		fmt.Printf("\n%s[RAG Eslenen Bilgi Dokumanlari]:%s\n", ColorPurple, ColorReset)
 		for _, match := range resp.RetrievedChunks {
-			fmt.Printf("   %s• %s (Kategori: %s, Güven Skoru: %.1f)%s\n", ColorGray, match.Chunk.Title, match.Chunk.Category, match.Score, ColorReset)
+			fmt.Printf("   %s- %s (Kategori: %s, Guven Skoru: %.1f)%s\n", ColorGray, match.Chunk.Title, match.Chunk.Category, match.Score, ColorReset)
 		}
 	}
 
 	// Print Executed Tools
 	if len(resp.ToolsExecuted) > 0 {
-		fmt.Printf("\n%s⚙️  [Yürütülen Sistem / Sandbox Tool'ları]:%s\n", ColorYellow, ColorReset)
+		fmt.Printf("\n%s[Yurutulen Sistem / Sandbox Araclari]:%s\n", ColorYellow, ColorReset)
 		for _, t := range resp.ToolsExecuted {
 			statusColor := ColorGreen
 			if !t.Success {
 				statusColor = ColorRed
 			}
-			fmt.Printf("   %s• Tool: %s%s%s (Parametreler: %s)\n", ColorBold, ColorYellow, t.ToolName, ColorReset, t.Input)
-			fmt.Printf("     %sSonuç: %s%s\n", statusColor, t.Output, ColorReset)
+			fmt.Printf("   %s- Arac: %s%s%s (Parametreler: %s)\n", ColorBold, ColorYellow, t.ToolName, ColorReset, t.Input)
+			fmt.Printf("     %sSonuc: %s%s\n", statusColor, t.Output, ColorReset)
 		}
 	}
 
 	// Print Final Answer
-	fmt.Printf("\n%s%s🤖 Ağ Asistanı:%s\n\n", ColorBold, ColorGreen, ColorReset)
+	fmt.Printf("\n%s%sAg Asistani:%s\n\n", ColorBold, ColorGreen, ColorReset)
 	fmt.Println(resp.FinalAnswer)
 }
 
 func printBanner(cfg *config.Config) {
 	fmt.Printf("%s=========================================================================%s\n", ColorBlue, ColorReset)
-	fmt.Printf("%s%s       🍎 macOS Ağ Yönetim ve Troubleshooting Asistanı (Agentic RAG)      %s\n", ColorBold, ColorGreen, ColorReset)
+	fmt.Printf("%s%s        macOS Ag Yonetim ve Troubleshooting Asistani (Agentic RAG)       %s\n", ColorBold, ColorGreen, ColorReset)
 	fmt.Printf("%s=========================================================================%s\n", ColorBlue, ColorReset)
-	fmt.Printf(" %s• Model Endpoint :%s %s\n", ColorWhite, ColorReset, cfg.APIBaseURL)
-	fmt.Printf(" %s• Aktif Model    :%s %s\n", ColorWhite, ColorReset, cfg.ModelName)
-	fmt.Printf(" %s• Güvenlik Modu  :%s %s%s[GÜVENLİ SANDBOX AKTİF - macOS Ayarlarınız Korunuyor]%s\n", ColorWhite, ColorReset, ColorBold, ColorGreen, ColorReset)
-	fmt.Printf(" %s• WebUI          :%s %s\n", ColorWhite, ColorReset, cfg.WebUIURL)
+	fmt.Printf(" %s- Model Endpoint :%s %s\n", ColorWhite, ColorReset, cfg.APIBaseURL)
+	fmt.Printf(" %s- Aktif Model    :%s %s\n", ColorWhite, ColorReset, cfg.ModelName)
+	fmt.Printf(" %s- Guvenlik Modu  :%s %s%s[GUVENLI SANDBOX AKTIF - macOS Ayarlari Korunuyor]%s\n", ColorWhite, ColorReset, ColorBold, ColorGreen, ColorReset)
 	fmt.Printf("%s-------------------------------------------------------------------------%s\n", ColorGray, ColorReset)
-	fmt.Printf(" %sKullanılabilir Komutlar: /status (Ağ Durumu), /reset (Sıfırla), /help, exit%s\n", ColorGray, ColorReset)
+	fmt.Printf(" %sKullanilabilir Komutlar: /status (Ag Durumu), /reset (Sifirla), /help, exit%s\n", ColorGray, ColorReset)
 	fmt.Printf("%s-------------------------------------------------------------------------%s\n", ColorGray, ColorReset)
 }
 

@@ -95,7 +95,6 @@ Chatbot 3 temel senaryo üzerinde uzmanlaşmıştır:
 * **Programlama Dili:** Go (1.23+)
 * **AI & Agent Çatısı:** Firebase Genkit Go Architecture & Flow Orchestration
 * **Yerel LLM:** Yerel Model Sunucusu (`http://10.2.2.115:8080/v1`) — Model: `gemma-4-E4B-it-qat-nvfp4.gguf` (Multimodal, Function Calling Destekli)
-* **WebUI:** `http://10.2.2.115:8080/`
 * **Ağ Simülasyonu & Güvenlik:** macOS Network Sandbox Engine (Host sistem ağ ayarlarını koruyan izole durum makinesi)
 * **Vektör & RAG Veri Katmanı:** Hibrit BM25/TF-IDF & Niyet Eşleştirmeli Çift Katmanlı Doküman Seti (`data/knowledge/`)
 * **Hedef İşletim Sistemi:** macOS (Darwin ARM64 / AMD64)

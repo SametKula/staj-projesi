@@ -240,7 +240,7 @@ func (tm *ToolManager) RunTroubleshootWorkflow(service string, autoRemediate boo
 	}
 
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf("=== 🔍 macOS Ağ Teşhis & Troubleshooting Raporu (%s) ===\n\n", service))
+	sb.WriteString(fmt.Sprintf("=== macOS Ag Teshis ve Troubleshooting Raporu (%s) ===\n\n", service))
 
 	// Step 1: Interface & Link State
 	infoText, iface, err := tm.sandbox.GetInfo(service)
@@ -255,13 +255,13 @@ func (tm *ToolManager) RunTroubleshootWorkflow(service string, autoRemediate boo
 		step1.Details = "Interface is DOWN."
 		report.Steps = append(report.Steps, step1)
 		report.RootCauseIdentified = "Fiziksel Arayüz Kapalı / Bağlantı Yok"
-		sb.WriteString("❌ ADIM 1 [BAŞARISIZ]: Fiziksel ağ arayüzü bağlı değil veya kapalı.\n\n")
+		sb.WriteString("[BASARISIZ] ADIM 1: Fiziksel ag arayuzu bagli degil veya kapali.\n\n")
 		return sb.String(), nil
 	}
 	step1.Description = fmt.Sprintf("Arayüz aktif. IP: %s, Ağ Geçidi (Router): %s", iface.IPv4Address, iface.Router)
 	step1.Details = infoText
 	report.Steps = append(report.Steps, step1)
-	sb.WriteString(fmt.Sprintf("✅ ADIM 1 [BAŞARILI]: Arayüz aktif (IP: %s, Router: %s)\n", iface.IPv4Address, iface.Router))
+	sb.WriteString(fmt.Sprintf("[BASARILI] ADIM 1: Arayuz aktif (IP: %s, Router: %s)\n", iface.IPv4Address, iface.Router))
 
 	// Step 2: Gateway Ping
 	router := iface.Router
@@ -280,12 +280,12 @@ func (tm *ToolManager) RunTroubleshootWorkflow(service string, autoRemediate boo
 		step2.Details = resGW.Output
 		report.Steps = append(report.Steps, step2)
 		report.RootCauseIdentified = "Yerel Ağ Geçidi / Modem Erişilemez"
-		sb.WriteString(fmt.Sprintf("❌ ADIM 2 [BAŞARISIZ]: Ağ geçidine (%s) ping atılamadı.\n\n", router))
+		sb.WriteString(fmt.Sprintf("[BASARISIZ] ADIM 2: Ag gecidine (%s) ping atilamadi.\n\n", router))
 		return sb.String(), nil
 	}
 	step2.Description = fmt.Sprintf("Ağ geçidi (%s) yanıt veriyor. Gecikme: %.2f ms", router, resGW.AvgLatencyMs)
 	report.Steps = append(report.Steps, step2)
-	sb.WriteString(fmt.Sprintf("✅ ADIM 2 [BAŞARILI]: Ağ geçidi (%s) erişilebilir (Gecikme: %.2f ms)\n", router, resGW.AvgLatencyMs))
+	sb.WriteString(fmt.Sprintf("[BASARILI] ADIM 2: Ag gecidi (%s) erisilebilir (Gecikme: %.2f ms)\n", router, resGW.AvgLatencyMs))
 
 	// Step 3: External IP Ping (8.8.8.8)
 	resExt, _ := tm.sandbox.Ping("8.8.8.8", 2)
@@ -300,12 +300,12 @@ func (tm *ToolManager) RunTroubleshootWorkflow(service string, autoRemediate boo
 		step3.Details = resExt.Output
 		report.Steps = append(report.Steps, step3)
 		report.RootCauseIdentified = "Genel İnternet Kesintisi (ISP Uplink Down)"
-		sb.WriteString("❌ ADIM 3 [BAŞARISIZ]: Dış IP'ye (8.8.8.8) ulaşılamıyor. İnternet servis sağlayıcı kesintisi.\n\n")
+		sb.WriteString("[BASARISIZ] ADIM 3: Dis IP'ye (8.8.8.8) ulasilamiyor. Internet servis saglayici kesintisi.\n\n")
 		return sb.String(), nil
 	}
 	step3.Description = fmt.Sprintf("İnternet IP çıkışı aktif. 8.8.8.8 yanıt verdi (Gecikme: %.2f ms)", resExt.AvgLatencyMs)
 	report.Steps = append(report.Steps, step3)
-	sb.WriteString(fmt.Sprintf("✅ ADIM 3 [BAŞARILI]: Dış internet IP çıkışı aktif (8.8.8.8, Gecikme: %.2f ms)\n", resExt.AvgLatencyMs))
+	sb.WriteString(fmt.Sprintf("[BASARILI] ADIM 3: Dis internet IP cikisi aktif (8.8.8.8, Gecikme: %.2f ms)\n", resExt.AvgLatencyMs))
 
 	// Step 4: Domain Name & DNS Resolution Test (google.com)
 	resDNS, _ := tm.sandbox.Ping("google.com", 2)
@@ -321,12 +321,12 @@ func (tm *ToolManager) RunTroubleshootWorkflow(service string, autoRemediate boo
 		step4.Details = resDNS.Output
 		report.Steps = append(report.Steps, step4)
 		report.RootCauseIdentified = "Hatalı / Yanıt Vermeyen DNS Sunucusu"
-		sb.WriteString("❌ ADIM 4 [BAŞARISIZ]: IP pingi başarılı ancak alan adı çözümlenemiyor ('google.com' çözülemedi).\n")
-		sb.WriteString("📌 KÖK NEDEN TESPİTİ: Mevcut DNS sunucusu (" + strings.Join(iface.DNSServers, ", ") + ") yanıt vermiyor.\n\n")
+		sb.WriteString("[BASARISIZ] ADIM 4: IP pingi basarili ancak alan adi cozumlenemiyor ('google.com' cozulemedi).\n")
+		sb.WriteString("KOK NEDEN TESPITI: Mevcut DNS sunucusu (" + strings.Join(iface.DNSServers, ", ") + ") yanit vermiyor.\n\n")
 
 		// Auto Remediation Loop
 		if autoRemediate {
-			sb.WriteString("⚡ [OTOMATİK DÜZELTME BAŞLATILIYOR]:\n")
+			sb.WriteString("[OTOMATIK DUZELTME BASLATILIYOR]:\n")
 			newDNS := []string{"8.8.8.8", "1.1.1.1"}
 			setMsg, err := tm.sandbox.SetDNSServers(service, newDNS)
 			if err == nil {
@@ -340,8 +340,8 @@ func (tm *ToolManager) RunTroubleshootWorkflow(service string, autoRemediate boo
 					report.AutoFixApplied = true
 					report.FixDetails = "DNS sunucuları 8.8.8.8 ve 1.1.1.1 olarak güncellendi, önbellek temizlendi ve google.com başarıyla çözümlendi."
 					report.FinalStatus = "RECOVERED"
-					sb.WriteString(fmt.Sprintf("  3. 🔁 [YENİDEN TEST]: google.com başarıyla çözümlendi ve yanıt verdi (Gecikme: %.2f ms).\n\n", retryRes.AvgLatencyMs))
-					sb.WriteString("🎉 SONUÇ: İnternet bağlantısı otomatik düzeltme (DNS güncellemesi) ile tamamen onarıldı!\n")
+					sb.WriteString(fmt.Sprintf("  3. [YENIDEN TEST]: google.com basariyla cozumledi ve yanit verdi (Gecikme: %.2f ms).\n\n", retryRes.AvgLatencyMs))
+					sb.WriteString("SONUC: Internet baglantisi otomatik duzeltme (DNS guncellemesi) ile tamamen onarildi.\n")
 					return sb.String(), nil
 				}
 			}
@@ -353,8 +353,8 @@ func (tm *ToolManager) RunTroubleshootWorkflow(service string, autoRemediate boo
 	step4.Description = fmt.Sprintf("DNS çözümleme ve alan adı erişimi sorunsuz. google.com yanıt verdi (Gecikme: %.2f ms)", resDNS.AvgLatencyMs)
 	report.Steps = append(report.Steps, step4)
 	report.FinalStatus = "HEALTHY"
-	sb.WriteString(fmt.Sprintf("✅ ADIM 4 [BAŞARILI]: DNS çözümleme ve internet erişimi sağlıklı (google.com, Gecikme: %.2f ms)\n\n", resDNS.AvgLatencyMs))
-	sb.WriteString("🎉 SONUÇ: Ağ bağlantısında herhangi bir sorun tespit edilmedi. Tüm katmanlar sağlıklı.\n")
+	sb.WriteString(fmt.Sprintf("[BASARILI] ADIM 4: DNS cozumleme ve internet erisimi saglikli (google.com, Gecikme: %.2f ms)\n\n", resDNS.AvgLatencyMs))
+	sb.WriteString("SONUC: Ag baglantisinda herhangi bir sorun tespit edilmedi. Tum katmanlar saglikli.\n")
 
 	return sb.String(), nil
 }

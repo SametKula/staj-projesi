@@ -9,7 +9,6 @@ type Config struct {
 	APIBaseURL       string
 	APIKey           string
 	ModelName        string
-	WebUIURL         string
 	SandboxMode      bool
 	SandboxStateFile string
 	KnowledgeDir     string
@@ -22,7 +21,6 @@ func Load() *Config {
 		APIBaseURL:       getEnv("LLM_API_BASE", "http://10.2.2.115:8080/v1"),
 		APIKey:           getEnv("LLM_API_KEY", "SeninGucluSifren123!"),
 		ModelName:        getEnv("LLM_MODEL", `..\models\gemma4\gemma-4-E4B-it-qat-nvfp4.gguf`),
-		WebUIURL:         getEnv("LLM_WEBUI", "http://10.2.2.115:8080/"),
 		SandboxMode:      getEnvBool("SANDBOX_MODE", true),
 		SandboxStateFile: getEnv("SANDBOX_STATE_FILE", "data/sandbox_state.json"),
 		KnowledgeDir:     getEnv("KNOWLEDGE_DIR", "data/knowledge"),
